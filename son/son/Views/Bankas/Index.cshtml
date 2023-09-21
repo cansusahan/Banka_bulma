@@ -1,0 +1,75 @@
+﻿@model IEnumerable<son.Models.Banka>
+
+
+@{
+    ViewData["Title"] = "Index";
+}
+<table>
+    <tr>
+        <td><b>kartınızın ilk 6 hanesini giriniz:</b></td>
+        <td>
+            <form asp-action="Search" method="get">
+                <input  type="text" name="searchTerm" placeholder="Search..." />
+                <button type="submit">Search</button>
+            </form>
+        </td>
+        
+    </tr>
+</table>
+
+
+
+@*<h1>Index</h1>*@
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Bin)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BankaKodu)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BankaAdi)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tip)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AltTip)
+            </th>
+           
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bin)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BankaKodu)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BankaAdi)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tip)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AltTip)
+            </td>
+            
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

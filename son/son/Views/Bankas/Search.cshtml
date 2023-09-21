@@ -1,0 +1,239 @@
+﻿@model IEnumerable<son.Models.Banka>
+
+@{
+    ViewData["Title"] = "Search";
+    Layout = "~/Views/Shared/_Layout.cshtml";//layout bu sayfaya ekli olamadıgı icin  ajax calısmamıstı $hatası vermişti o yüzden ekledik
+}
+@*textboxların oldugu bölge*@
+<div class="row">
+    <div class="col-md-6">
+        <b>Kartınızın ilk 6 hanesini giriniz</b><br />
+        <input type="text" id="searchTerm" name="searchTerm" placeholder="Search..." /><br />
+
+        <b>son kullanma tarihi giriniz</b><br />
+        <input id="deger" type="text" /><br />
+        <b>cvv giriniz</b><br />
+        <input id="digerInput" type="text" />
+
+    </div>
+    @*javascriptle kredi kartı olusturdum site dosyasındanda cssle tasarımını verdim*@
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-logo" id="logo">
+
+                
+            </div>
+            <div class="card-number" id="cardNumber">
+            </div>
+            <div class="card-expiry">
+                <b>Expiry Date:</b> <span id="sonuc"></span>
+            </div>
+            <div class="card-cvv">
+                <b>CVV:</b> <span id="digerSonuc"></span>
+            </div>
+            <img class="card-chip" src="~/images/chip.png" alt="Chip">
+        </div>
+    </div>
+
+</div>
+<script>//tarih ve cvv inputların anlık deger yazması icin yazdıgım kod
+    const deger = document.getElementById('deger');
+    const sonuc = document.getElementById('sonuc');
+
+    const degerYakala = function (e) {
+        sonuc.innerHTML = e.target.value;
+    }
+
+    deger.addEventListener('input', degerYakala);
+
+    const digerInput = document.getElementById('digerInput');
+    const digerSonuc = document.getElementById('digerSonuc');
+
+    const digerInputYakala = function (e) {
+        digerSonuc.innerHTML = e.target.value;
+    }
+
+    digerInput.addEventListener('input', digerInputYakala);
+</script>
+
+
+
+
+@*butonlu yapılışı
+<table>
+    <tr>
+        <td><b>kartınızın ilk 6 hanesini giriniz:</b></td>
+        <td>
+            <form asp-action="Search" method="get">
+                <input type="text" name="searchTerm" placeholder="Search..." />
+                <button type="submit">Search</button>
+            </form>
+        </td>
+
+    </tr>
+</table>
+*@
+
+
+<a asp-action="Create">Create New</a>
+
+
+<h4>Banka bilgileriniz</h4>
+<table id="myTable" class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Bin)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BankaKodu)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BankaAdi)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tip)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AltTip)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody id="listBody">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Bin)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BankaKodu)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BankaAdi)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Tip)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AltTip)
+                </td>
+
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+@section Scripts{@* ajaxla textbox icinden alınan veriyi anlık olarak yazılmasını sagladım*@
+    <script>
+        $(function () {
+         
+            $("#searchTerm").on('input', function () {// change olayı olursa tıklanma gerektirir, on tıklama gerektirmiyor
+
+                var veri = $("#searchTerm").val();
+                $("#cardNumber").text(veri);//texte yazılan veriyi javascripte yaptıgım kartın uzerine yazdırdım
+                
+                if (veri.length > 0) {
+                    $.ajax({
+                        url: "/Bankas/SearchFilter",
+                        method: "Get",
+                        data: { searchTerm: veri },
+                        success: function (response) {
+                            if (response != null) {
+                                $("#listBody").empty();//eski icerigi temizle
+                                
+                                
+                                $.each(response, function (key, value) {//each responsenun  degerlerinin dongusunu olusturuyor
+                                    
+                                    $("#myTable > tbody").append(//mytable icindeki tbody icerik ekledik
+                                        "<tr>" +
+                                        "<td>" + "<b>" + value['bin'] + "</b>" + "</td>" +
+                                        "<td>" + value['bankaKodu'] + "</td>" +
+                                        "<td>" + value['bankaAdi'] + "</td>" +
+                                        "<td>" + value['tip'] + "</td>" +
+                                        "<td>" + value['altTip'] + "</td>" +
+                                        "</tr>");
+    
+                                    //javascriptle yazılan karta bulunan degerin tipini cekip ona göre resim getirdim
+                                    if (value.tip == "VISA") {
+                                        $("#logo").empty();
+                                        $("#logo").append(
+                                            '<img src="../images/indir.png" alt="Card Logo">'//~burda bunu kullanıcı hata verdi o yüzden .. kullandım
+                                        );
+                                    }
+                                    else {
+                                        $("#logo").empty();
+                                        $("#logo").append(
+                                            '<img src="../images/png-transparent-mastercard.png" alt="Mastercard">'
+                                        );
+                                    }
+
+                                    //taksit listeleme kodunu yaptım
+                                    if (value.bankaAdi == "T.C. ZIRRAT BANKASI A.S.") {
+                                        for (var i = 1; i <= 8; i++) {
+                                            $("#myTable > tbody").append(
+                                                "<tr>" +
+                                                "<td>" + value['bankaAdi'] + "</td>" +
+                                                "<td>Taksit " + i + "</td>" +
+                                                "</tr>"
+                                            );
+                                        }
+                                    }
+                                    else if (value.bankaAdi === "T.IS BANKASI A.S") {
+                                        for (var i = 1; i <= 6; i++) {
+                                            $("#myTable > tbody").append(
+                                                "<tr>" +
+                                                "<td>" + value['bankaAdi'] + "</td>" +
+                                                "<td>Taksit " + i + "</td>" +
+                                                "</tr>"
+                                            );
+                                        }
+                                    }
+                                    else {
+                                        for (var i = 1; i <= 3; i++) {
+                                            $("#myTable > tbody").append(
+                                                "<tr>" +
+                                                "<td>" + value['bankaAdi'] + "</td>" +
+                                                "<td>Taksit " + i + "</td>" +
+                                                "</tr>"
+                                            );
+                                        }
+
+                                    }
+                                })
+
+                            }
+                        }
+                    })
+                }
+
+            });
+        });
+
+    </script>
+}
+
+
+@*<table> bankanın tksit sayısını yazdırıyor
+
+    <tr>
+        <td>
+            <b>Bankanızın size verdigi taksit sayısı: </b>
+        </td>
+        <td>
+            @foreach (var item in Model)
+            {
+                @item.Taksit
+            }
+        </td>
+    </tr>
+    </table>*@

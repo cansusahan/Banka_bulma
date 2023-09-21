@@ -1,0 +1,73 @@
+﻿@model son.Models.Banka
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Banka</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        @*
+        <div>
+            <table>
+                <tr>
+                    <td><b>kartınızın ilk 6 hanesini giriniz:</b></td>
+                    <td>
+                        <form id="searchForm" asp-action="Search" method="get">
+                            <input type="text" id="searchTerm" name="searchTerm" placeholder="Search..." />
+                        </form>
+                    </td>
+                </tr>
+            </table>
+
+            <script>
+                document.getElementById("searchTerm").addEventListener("input", function () {
+                    var searchTerm = this.value.trim();
+                    if (searchTerm.length >= 6) {
+                        document.getElementById("searchForm").submit();
+                    }
+                });
+            </script>
+        </div>*@
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Bin" class="control-label"></label>
+                <input asp-for="Bin" class="form-control" />
+                <span asp-validation-for="Bin" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BankaKodu" class="control-label"></label>
+                <input asp-for="BankaKodu" class="form-control" />
+                <span asp-validation-for="BankaKodu" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BankaAdi" class="control-label"></label>
+                <input asp-for="BankaAdi" class="form-control" />
+                <span asp-validation-for="BankaAdi" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Tip" class="control-label"></label>
+                <input asp-for="Tip" class="form-control" />
+                <span asp-validation-for="Tip" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AltTip" class="control-label"></label>
+                <input asp-for="AltTip" class="form-control" />
+                <span asp-validation-for="AltTip" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

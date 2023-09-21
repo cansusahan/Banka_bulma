@@ -1,0 +1,37 @@
+
+      
+.card {
+    width: 360px;
+    height: 200px;
+    background-color: #d31b1b;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+}
+.card-logo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.card-logo img {
+    width: 50px;
+    height: auto;
+}
+.card-number {
+    font-size: 18px;
+    margin: 20px 0;
+}
+
+.card-expiry {
+    font-size: 16px;
+    margin-top: 10px;
+}
+.card-cvv {
+    font-size: 16px;
+    margin-top: 10px;
+}
+.card-chip {
+    width: 60px;
+    margin: 20px auto;
+    
+}
